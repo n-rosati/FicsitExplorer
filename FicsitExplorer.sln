@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FicsitExplorer", "FicsitExplorer\FicsitExplorer.csproj", "{49E5392A-835D-4E3D-9349-95F81A3D5028}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{49E5392A-835D-4E3D-9349-95F81A3D5028}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49E5392A-835D-4E3D-9349-95F81A3D5028}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49E5392A-835D-4E3D-9349-95F81A3D5028}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49E5392A-835D-4E3D-9349-95F81A3D5028}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
