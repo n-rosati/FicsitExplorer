@@ -7,13 +7,13 @@
         mc:Ignorable="d"
         Title="Ficsit Explorer" Height="450" Width="800">
     <Grid>
-        <ListView>
+        <ListView Name="lvMods">
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
-                    <GridViewColumn Header="Logo" Width="120"/>
-                    <GridViewColumn Header="Name" Width="150"/>
-                    <GridViewColumn Header="Downloads" Width="100"/>
-                    <GridViewColumn Header="Description" Width="430"/>
+                    <GridViewColumn Header="Logo" Width="120" DisplayMemberBinding="{Binding Logo}"/>
+                    <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Downloads" Width="100" DisplayMemberBinding="{Binding Downloads}"/>
+                    <GridViewColumn Header="Description" Width="400" DisplayMemberBinding="{Binding Description}"/>
                 </GridView>
             </ListView.View>
         </ListView>

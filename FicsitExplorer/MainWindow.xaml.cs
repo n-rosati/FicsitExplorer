@@ -23,6 +23,17 @@ namespace FicsitExplorer
         public MainWindow()
         {
             InitializeComponent();
+            List<Mod> mods = new List<Mod>();
+            mods.Add(new Mod() {Logo = "logoURL", Name = "testName", Description = "testDesc", Downloads = "123456789"});
+            lvMods.ItemsSource = mods;
         }
+    }
+
+    public class Mod
+    {
+        public string Logo { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Downloads { get; set; }
     }
 }
