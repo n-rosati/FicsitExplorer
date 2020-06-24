@@ -5,17 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FicsitExplorer"
         mc:Ignorable="d"
-        Title="Ficsit Explorer" Height="450" Width="800">
+        Title="Ficsit Explorer" Height="720" Width="1280" ResizeMode="NoResize">
     <Grid>
-        <ListView Name="lvMods">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ListView Grid.Column="0" Name="LvMods" Width="800" Height="720" >
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
-                    <GridViewColumn Header="Logo" Width="120" DisplayMemberBinding="{Binding Logo}"/>
-                    <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Downloads" Width="100" DisplayMemberBinding="{Binding Downloads}"/>
-                    <GridViewColumn Header="Description" Width="400" DisplayMemberBinding="{Binding Description}"/>
+                    <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Downloads" Width="100" DisplayMemberBinding="{Binding Downloads}" />
+                    <GridViewColumn Header="Description" Width="420" DisplayMemberBinding="{Binding Description}" />
                 </GridView>
             </ListView.View>
         </ListView>
+        <Grid Grid.Column="1">
+            <Image Name="LogoImage" Source="{Binding Source}" Stretch="Uniform"/>
+        </Grid>
     </Grid>
 </Window>
