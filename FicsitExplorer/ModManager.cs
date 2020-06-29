@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GraphQL;
 
 namespace FicsitExplorer
 {
@@ -13,7 +14,7 @@ namespace FicsitExplorer
             ModList = new List<Mod>();
         }
         
-        public static ModManager GetManager () //Ok, Karen
+        public static ModManager GetInstance ()
         {
             if (_instance == null) _instance = new ModManager();
             return _instance;
@@ -26,17 +27,12 @@ namespace FicsitExplorer
         
         private static Mod GetModInfo(string id)
         {
-            /*TODO: Get info from GraphQL API https://api.ficsit.app/v2/query
-             query {
-                getMod (modId: ID){
-                name
-                short_description
-                downloads
-                id
-                logo
-              }
-            }
-            */
+            /*TODO: Get info from GraphQL API https://api.ficsit.app/v2/query*/
+            GraphQLRequest request = new GraphQLRequest
+            {
+                Query = "query{\ngetMod(modId:" + id + "){\nname\nshort_description\ndownloads\nid\nlogo\n}\n}"
+            };
+            
             return null;
         }
     }

@@ -8,7 +8,7 @@ namespace FicsitExplorer
         public MainWindow()
         {
             InitializeComponent();
-            Manager = ModManager.GetManager();
+            Manager = ModManager.GetInstance();
             
             LvMods.ItemsSource = Manager.ModList;
             
