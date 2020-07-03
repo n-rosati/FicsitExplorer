@@ -10,8 +10,13 @@ namespace FicsitExplorer
         public APIInteractor()
         {
             //Sets up the REST client and a template request (if readonly works the way I think it does)
-            //To use: make a local copy of the request, add the parameter `("application/json", <query>, ParameterType.RequestBody)`, and client.Execute() it (which gives back a IRestResponse)
             _client = new RestClient("https://api.ficsit.app/v2/query");
+            
+            /*To use:
+                1. Make a local copy of the request
+                2. Add the parameter 
+                    ("application/json", <query>, ParameterType.RequestBody)
+                3. client.Execute() the request*/
             _requestTemplate = new RestRequest(Method.POST);
             _requestTemplate.AddHeader("Accept", "application/json");
             _requestTemplate.AddHeader("Content-Type", "application/json");

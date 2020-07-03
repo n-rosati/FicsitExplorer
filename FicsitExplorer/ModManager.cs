@@ -1,37 +1,32 @@
 ﻿using System.Collections.Generic;
-using GraphQL;
 
 namespace FicsitExplorer
 {
+    //Singleton class
     public class ModManager
     {
         public List<Mod> ModList { get; }
         private static ModManager _instance;
+        private APIInteractor _apiInteractor;
 
-        //For singleton stuff
         private ModManager()
         {
             ModList = new List<Mod>();
+            _apiInteractor = new APIInteractor();
         }
-        
-        public static ModManager GetInstance ()
+
+        public static ModManager GetInstance()
         {
-            if (_instance == null) _instance = new ModManager();
-            return _instance;
+            return _instance ??= new ModManager();
         }
-        
+
         public void AddMod(string id)
         {
-            ModList.Add(GetModInfo(id));
+            ModList.Add(CreateMod(id));
         }
-        
-        private static Mod GetModInfo(string id)
+
+        private static Mod CreateMod(string id)
         {
-            /*TODO: Get info from GraphQL API https://api.ficsit.app/v2/query*/
-            GraphQLRequest request = new GraphQLRequest
-            {
-                Query = "query{\ngetMod(modId:" + id + "){\nname\nshort_description\ndownloads\nid\nlogo\n}\n}"
-            };
             
             return null;
         }
