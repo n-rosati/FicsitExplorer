@@ -22,6 +22,10 @@ namespace FicsitExplorer
             _requestTemplate.AddHeader("Content-Type", "application/json");
         }
         
+        /**
+         * Gets details about a specific mod.
+         * id: Mod ID to get details about
+         */
         public string GetModDetails(string id)
         {
             RestRequest request = _requestTemplate;
@@ -39,13 +43,24 @@ namespace FicsitExplorer
                     }}",
                 ParameterType.RequestBody);
             return _client.Execute(request).Content;
+            //TODO: Cut off the extensions part of the response
         }
 
+        /**
+         * Gets a list of all mods on the website
+         */
         public string GetModList()
         {
             /*TODO: Get a list of all mods on the site.
                         - Will need to query the site more than once, since the API only gives 100 at a time
                         -Return JSON string*/
+            //TODO: Cut off the extensions part of the response
+            return null;
+        }
+
+        private string RemoveExtensions(string input)
+        {
+            //TODO: Remove the whole `extensions` part of the inputted JSON response
             return null;
         }
     }
