@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using Newtonsoft.Json.Linq;
+using RestSharp;
 
 namespace FicsitExplorer
 {
@@ -29,21 +30,8 @@ namespace FicsitExplorer
         public string GetModDetails(string id)
         {
             RestRequest request = _requestTemplate;
-            request.AddParameter("application/json",
-                //"{\"query\":\"query {\\r\\ngetMod(modId:\\\" + id + \\\"){\\r\\nname\\r\\nshort_description\\r\\ndownloads\\r\\nid\\r\\nlogo\\r\\n}\\r\\n}\"}"
-                $@"{{""query"":""query {{
-	                        getMod(modId:{id}){{
-                                name
-                                short_description
-                                downloads
-                                id
-                                logo
-                            }}
-                        }}""
-                    }}",
-                ParameterType.RequestBody);
-            return _client.Execute(request).Content;
-            //TODO: Cut off the extensions part of the response
+            request.AddParameter("application/json",$"{{\"query\":\"query {{getMod(modId:{id}){{name short_description downloads id logo}}}}\"}}", ParameterType.RequestBody);
+            return GetDataFromJSON(_client.Execute(request).Content);
         }
 
         /**
@@ -58,10 +46,22 @@ namespace FicsitExplorer
             return null;
         }
 
-        private string RemoveExtensions(string input)
+        /**
+         * Just returns the "data" token from an inputted JSON string.
+         * Returns null if parsing failed.
+         */
+        private string GetDataFromJSON(string input)
         {
-            //TODO: Remove the whole `extensions` part of the inputted JSON response
-            return null;
+            string returnString;
+            try
+            {
+                returnString = JObject.Parse(input).SelectToken("data", false).ToString();
+            }
+            catch
+            {
+                returnString = null;
+            }
+            return returnString;
         }
     }
 }
