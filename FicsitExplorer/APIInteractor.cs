@@ -1,4 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic.CompilerServices;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace FicsitExplorer
@@ -6,13 +10,13 @@ namespace FicsitExplorer
     public class APIInteractor
     {
         private readonly RestClient _client;
+
         private readonly RestRequest _requestTemplate;
-        
+
         public APIInteractor()
         {
             //Sets up the REST client and a template request (if readonly works the way I think it does)
             _client = new RestClient("https://api.ficsit.app/v2/query");
-            
             /*To use:
                 1. Make a local copy of the request
                 2. Add the parameter 
@@ -22,7 +26,7 @@ namespace FicsitExplorer
             _requestTemplate.AddHeader("Accept", "application/json");
             _requestTemplate.AddHeader("Content-Type", "application/json");
         }
-        
+
         /**
          * Gets details about a specific mod.
          * id: Mod ID to get details about
@@ -37,15 +41,50 @@ namespace FicsitExplorer
         /**
          * Gets a list of all mods on the website
          */
-        public string GetModList()
+        public List<JToken> GetModList()
         {
-            /*TODO: Get a list of all mods on the site.
-                        - Will need to query the site more than once, since the API only gives 100 at a time
-                        -Return JSON string*/
-            //TODO: Cut off the extensions part of the response
-            return null;
+            int modCount = GetModsCount();
+            RestRequest request = _requestTemplate;
+            List<JToken> mods = new List<JToken>();
+            for (int i = 0; i < (modCount / 100) + 1; i++)
+            {
+                request.AddOrUpdateParameter("application/json",$"{{\"query\":\"query {{getMods (filter: {{limit: 100 offset: {i * 100}}}){{count mods {{name short_description downloads id logo}}}}}}\"}}", ParameterType.RequestBody);
+                string response = GetDataFromJSON(_client.Execute(request).Content);
+                try
+                {
+                    mods.AddRange(JObject.Parse(response)["getMods"]!["mods"]!.ToList());
+                }
+                catch (NullReferenceException)
+                {
+                    throw new Exception($"Could not find \"getMods\" or \"mods\" fields in server response. Server sent:\n{response}");
+                }
+            }
+            
+            return mods;
         }
 
+        /**
+         * Gets the number of mods available on the platform
+         */
+        private int GetModsCount()
+        {
+            RestRequest request = _requestTemplate;
+            request.AddParameter("application/json", "{\"query\":\"query {getMods {count}}\"}", ParameterType.RequestBody);
+            string response = GetDataFromJSON(_client.Execute(request).Content);
+            
+            int modCount;
+            try
+            {
+                modCount = IntegerType.FromString(JObject.Parse(response)["getMods"]!["count"]!.ToString());
+            }
+            catch (NullReferenceException)
+            {
+                throw new Exception($"Could not find \"getMods\" or \"count\" fields in server response. Server sent:\n{response}");
+            }
+
+            return modCount;
+        }
+        
         /**
          * Just returns the "data" token from an inputted JSON string.
          * Returns null if parsing failed.
