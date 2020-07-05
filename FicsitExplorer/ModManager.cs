@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Microsoft.VisualBasic.CompilerServices;
+using Newtonsoft.Json.Linq;
 
 namespace FicsitExplorer
 {
@@ -7,7 +9,7 @@ namespace FicsitExplorer
     {
         public List<Mod> ModList { get; }
         private static ModManager _instance;
-        private APIInteractor _apiInteractor;
+        private readonly APIInteractor _apiInteractor;
 
         private ModManager()
         {
@@ -24,20 +26,30 @@ namespace FicsitExplorer
         }
 
         /**
-         * Adds a mod to the mods list
+         * Populates the mods list with all the mods available on the platform
          */
-        public void AddMod(string id)
+        public void PopulateMods()
         {
-            ModList.Add(CreateMod(id));
+            List<JToken> mods = _apiInteractor.GetModList();
+            foreach (JToken token in mods)
+            {
+                ModList.Add(CreateModFromJSON(token.ToString()));
+            }
         }
-
+        
         /**
-         * Creates a new Mod given a mod id
+         * Creates a mod given inputted JSON describing it
          */
-        private static Mod CreateMod(string id)
+        private Mod CreateModFromJSON(string info)
         {
-            
-            return null;
+            Mod mod = new Mod();
+            JObject parsedData = JObject.Parse(info);
+            mod.Name = parsedData["name"]!.ToString();
+            mod.Description = parsedData["short_description"]!.ToString();
+            mod.Downloads = LongType.FromString(parsedData["downloads"]!.ToString());
+            mod.ID = parsedData["id"]!.ToString();
+            mod.LogoURL = parsedData["logo"]!.ToString();
+            return mod;
         }
     }
 }
