@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
+using System.Windows.Data;
 
 namespace FicsitExplorer
 {
@@ -12,6 +14,9 @@ namespace FicsitExplorer
             Manager.PopulateMods();
             
             LvMods.ItemsSource = Manager.ModList;
+            //TODO: Allow user to set sorting method
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(LvMods.ItemsSource);
+            view.SortDescriptions.Add(new SortDescription("Downloads", ListSortDirection.Descending));
             
             //PoC for how to set the image programatically
             
