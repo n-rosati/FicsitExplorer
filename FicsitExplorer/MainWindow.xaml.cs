@@ -9,6 +9,7 @@ namespace FicsitExplorer
         {
             InitializeComponent();
             Manager = ModManager.GetInstance();
+            Manager.PopulateMods();
             
             LvMods.ItemsSource = Manager.ModList;
             
@@ -19,9 +20,6 @@ namespace FicsitExplorer
             image.Source = new BitmapImage(new Uri(mods[0].LogoURL));
             LogoImage.Source = image.Source;
             */
-            
-            //For debugging
-            APIInteractor interactor = new APIInteractor();
         }
     }
 }
