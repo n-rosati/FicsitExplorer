@@ -34,7 +34,7 @@ namespace FicsitExplorer
         public string GetModDetails(string id)
         {
             RestRequest request = _requestTemplate;
-            request.AddParameter("application/json",$"{{\"query\":\"query {{getMod(modId:{id}){{name short_description downloads id logo}}}}\"}}", ParameterType.RequestBody);
+            request.AddParameter("application/json",$"{{\"query\":\"query {{getMod(modId:{id}){{id name short_description full_description logo downloads updated_at }}}}\"}}", ParameterType.RequestBody);
             return GetDataFromJSON(_client.Execute(request).Content);
         }
 
