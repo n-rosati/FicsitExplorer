@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json.Linq;
 using SAHB.GraphQLClient.Executor;
 
@@ -18,7 +16,7 @@ namespace FicsitExplorer
             string returnString;
             try
             {
-                returnString = JObject.Parse(executor.ExecuteQuery(query, APIUrl, HttpMethod.Post).Result.Response).SelectToken("data", false)!.ToString();
+                returnString = JObject.Parse(executor.ExecuteQuery(query, APIUrl, System.Net.Http.HttpMethod.Post).Result.Response).SelectToken("data", false)!.ToString();
             }
             catch
             {
@@ -73,7 +71,7 @@ namespace FicsitExplorer
             int modCount;
             try
             {
-                modCount = IntegerType.FromString(JObject.Parse(response)["getMods"]!["count"]!.ToString());
+                modCount = Microsoft.VisualBasic.CompilerServices.IntegerType.FromString(JObject.Parse(response)["getMods"]!["count"]!.ToString());
             }
             catch (NullReferenceException)
             {
