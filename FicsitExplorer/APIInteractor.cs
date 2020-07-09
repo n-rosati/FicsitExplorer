@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using SAHB.GraphQLClient.Executor;
 
 namespace FicsitExplorer
 {
     public class APIInteractor
     {
         private readonly RestClient _client;
-
         private readonly RestRequest _requestTemplate;
+        private readonly IGraphQLHttpExecutor _executor;
+        private const string APIUrl = "https://api.ficsit.app/v2/query";
 
         public APIInteractor()
         {
@@ -25,6 +28,8 @@ namespace FicsitExplorer
             _requestTemplate = new RestRequest(Method.POST);
             _requestTemplate.AddHeader("Accept", "application/json");
             _requestTemplate.AddHeader("Content-Type", "application/json");
+            
+            _executor = new GraphQLHttpExecutor();
         }
 
         /**
@@ -33,14 +38,16 @@ namespace FicsitExplorer
          */
         public string GetModDetails(string id)
         {
-            RestRequest request = _requestTemplate;
-            request.AddParameter("application/json",$"{{\"query\":\"query {{getMod(modId:{id}){{id name short_description full_description logo downloads updated_at }}}}\"}}", ParameterType.RequestBody);
-            return GetDataFromJSON(_client.Execute(request).Content);
+            return _executor.ExecuteQuery(
+                $"{{\"query\":\"query {{getMod(modId:{id}){{id name short_description full_description logo downloads updated_at }}}}\"}}",
+                APIUrl, 
+                HttpMethod.Post).Result.Response;
         }
 
         /**
          * Gets a list of all mods on the website
          */
+        //TODO: Turn these into batch requests for SAHB library
         public List<JToken> GetModList()
         {
             int modCount = GetModsCount();
@@ -68,9 +75,10 @@ namespace FicsitExplorer
          */
         private int GetModsCount()
         {
-            RestRequest request = _requestTemplate;
-            request.AddParameter("application/json", "{\"query\":\"query {getMods {count}}\"}", ParameterType.RequestBody);
-            string response = GetDataFromJSON(_client.Execute(request).Content);
+            string response = GetDataFromJSON(_executor.ExecuteQuery(
+                "{\"query\":\"query {getMods {count}}\"}",
+                APIUrl, 
+                HttpMethod.Post).Result.Response);
             
             int modCount;
             try
