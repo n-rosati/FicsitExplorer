@@ -4,31 +4,17 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json.Linq;
-using RestSharp;
 using SAHB.GraphQLClient.Executor;
 
 namespace FicsitExplorer
 {
     public class APIInteractor
     {
-        private readonly RestClient _client;
-        private readonly RestRequest _requestTemplate;
         private readonly IGraphQLHttpExecutor _executor;
         private const string APIUrl = "https://api.ficsit.app/v2/query";
 
         public APIInteractor()
         {
-            //Sets up the REST client and a template request (if readonly works the way I think it does)
-            _client = new RestClient("https://api.ficsit.app/v2/query");
-            /*To use:
-                1. Make a local copy of the request
-                2. Add the parameter 
-                    ("application/json", <query>, ParameterType.RequestBody)
-                3. client.Execute() the request*/
-            _requestTemplate = new RestRequest(Method.POST);
-            _requestTemplate.AddHeader("Accept", "application/json");
-            _requestTemplate.AddHeader("Content-Type", "application/json");
-            
             _executor = new GraphQLHttpExecutor();
         }
 
@@ -47,16 +33,16 @@ namespace FicsitExplorer
         /**
          * Gets a list of all mods on the website
          */
-        //TODO: Turn these into batch requests for SAHB library
         public List<JToken> GetModList()
         {
             int modCount = GetModsCount();
-            RestRequest request = _requestTemplate;
             List<JToken> mods = new List<JToken>();
             for (int i = 0; i < (modCount / 100) + 1; i++)
             {
-                request.AddOrUpdateParameter("application/json",$"{{\"query\":\"query {{getMods (filter: {{limit: 100 offset: {i * 100}}}){{count mods {{name short_description downloads id logo}}}}}}\"}}", ParameterType.RequestBody);
-                string response = GetDataFromJSON(_client.Execute(request).Content);
+                string response = _executor.ExecuteQuery(
+                    $"{{\"query\":\"query {{getMods (filter: {{limit: 100 offset: {i * 100}}}){{count mods {{name short_description downloads id logo}}}}}}\"}}",
+                    APIUrl, 
+                    HttpMethod.Post).Result.Response;
                 try
                 {
                     mods.AddRange(JObject.Parse(response)["getMods"]!["mods"]!.ToList());
