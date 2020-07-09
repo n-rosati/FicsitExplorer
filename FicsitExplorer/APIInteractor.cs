@@ -10,7 +10,7 @@ namespace FicsitExplorer
     {
         private const string APIUrl = "https://api.ficsit.app/v2/query";
 
-        private string MakeRequest(string query)
+        private string MakeQuery(string query)
         {
             IGraphQLHttpExecutor executor = new GraphQLHttpExecutor();
             string returnString;
@@ -32,7 +32,7 @@ namespace FicsitExplorer
          */
         public string GetModDetails(string id)
         {
-            return MakeRequest(
+            return MakeQuery(
                 $"{{\"query\":\"query {{getMod(modId:{id}){{id name short_description full_description logo downloads updated_at }}}}\"}}");
         }
 
@@ -46,7 +46,7 @@ namespace FicsitExplorer
             for (int i = 0; i < (modCount / 100) + 1; i++)
             {
                 string response =
-                    MakeRequest(
+                    MakeQuery(
                         $"{{\"query\":\"query {{getMods (filter: {{limit: 100 offset: {i * 100}}}){{count mods {{name short_description downloads id logo}}}}}}\"}}");
                 try
                 {
@@ -67,7 +67,7 @@ namespace FicsitExplorer
          */
         private int GetModsCount()
         {
-            string response = MakeRequest("{\"query\":\"query {getMods {count}}\"}");
+            string response = MakeQuery("{\"query\":\"query {getMods {count}}\"}");
             int modCount;
             try
             {
