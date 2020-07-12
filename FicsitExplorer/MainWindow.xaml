@@ -5,23 +5,37 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FicsitExplorer"
         mc:Ignorable="d"
-        Title="Ficsit Explorer" Height="720" Width="1280" ResizeMode="NoResize">
+        Title="Ficsit Explorer" Height="800" Width="1280" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <ListView Grid.Column="0" Name="LvMods" Width="800" Height="720" >
+        <ListView Grid.Column="0" Name="LvMods" Width="850">
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
                     <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}" />
                     <GridViewColumn Header="Downloads" Width="100" DisplayMemberBinding="{Binding Downloads}" />
-                    <GridViewColumn Header="Description" Width="420" DisplayMemberBinding="{Binding Description}" />
+                    <GridViewColumn Header="Description" Width="570" DisplayMemberBinding="{Binding Description}" />
                 </GridView>
             </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SetModDetails"/>
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
         <Grid Grid.Column="1">
-            <Image Name="LogoImage" Source="{Binding Source}" Stretch="Uniform"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="500"/>
+                    <RowDefinition />
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <Image Name="LogoImage" Source="" Stretch="Uniform" Grid.Row="0" VerticalAlignment="Top"/>
+                <TextBlock Name="ModDescription" Grid.Row="1" Text="" Padding="20px" TextWrapping="Wrap"/>
+                <Button Name="DownloadButton" Content="Download" Click="DownloadMod" Grid.Row="2" IsEnabled="False"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

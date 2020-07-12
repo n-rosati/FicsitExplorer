@@ -8,15 +8,13 @@ namespace FicsitExplorer
 {
     public class APIInteractor
     {
-        private const string APIUrl = "https://api.ficsit.app/v2/query";
-
         private string MakeQuery(string query)
         {
             IGraphQLHttpExecutor executor = new GraphQLHttpExecutor();
             string returnString;
             try
             {
-                returnString = JObject.Parse(executor.ExecuteQuery(query, APIUrl, System.Net.Http.HttpMethod.Post).Result.Response).SelectToken("data", false)!.ToString();
+                returnString = JObject.Parse(executor.ExecuteQuery(query, "https://api.ficsit.app/v2/query", System.Net.Http.HttpMethod.Post).Result.Response).SelectToken("data", false)!.ToString();
             }
             catch
             {
@@ -32,8 +30,7 @@ namespace FicsitExplorer
          */
         public string GetModDetails(string id)
         {
-            return MakeQuery(
-                $"{{\"query\":\"query {{getMod(modId:{id}){{id name short_description full_description logo downloads updated_at }}}}\"}}");
+            return MakeQuery($"{{\"query\":\"query {{getMod(modId:{id}){{id name short_description full_description logo downloads updated_at }}}}\"}}");
         }
 
         /**
