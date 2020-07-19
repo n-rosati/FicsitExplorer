@@ -27,18 +27,25 @@ namespace FicsitExplorer
         }
 
         //Event handlers
+        
+        /**
+         * Sets the details pane with the selected mod details
+         */
         private void SetModDetails(object sender, MouseButtonEventArgs e)
         {
             Mod mod = (Mod)((ListViewItem) sender).Content;
             
             LogoImage.Source = new BitmapImage(new Uri(mod.LogoURL));
-            ModDescription.Text = mod.Description;
+            ModDescription.Text = mod.ShortDescription;
             DownloadButton.IsEnabled = true;
         }
 
+        /**
+         * Downloads the selected mod to the user's Downloads folder
+         */
         private void DownloadMod(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("Downloading not yet implemented");
+            Manager.DownloadMod(null);
         }
     }
 }

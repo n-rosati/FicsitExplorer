@@ -30,7 +30,7 @@ namespace FicsitExplorer
          */
         public string GetModDetails(string id)
         {
-            return MakeQuery($"{{\"query\":\"query {{getMod(modId:{id}){{id name short_description full_description logo downloads updated_at }}}}\"}}");
+            return MakeQuery($"{{\"query\":\"query {{getMod(modId:{id}){{id name short_description full_description logo downloads updated_at versions(filter: {{limit: 1}}){{link}}}}}}\"}}");
         }
 
         /**
