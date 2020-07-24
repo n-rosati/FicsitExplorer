@@ -49,17 +49,23 @@ namespace FicsitExplorer
         private Mod CreateModFromJSON(string info)
         {
             Mod mod = new Mod();
-            JObject parsedData = JObject.Parse(info);
-            mod.Name = parsedData["name"]!.ToString();
-            mod.ShortDescription = parsedData["short_description"]!.ToString();
+            JObject parsedData   = JObject.Parse(info);
+            
+            mod.Name             = (string)parsedData["name"]!;
+            mod.ShortDescription = (string)parsedData["short_description"]!;
+            // mod.FullDescription  = (string)parsedData["full_description"]!;
             //TODO: Figure out why full_description breaks the JSON parsing
-            mod.Downloads = (long)parsedData["downloads"]!;
-            mod.ID = parsedData["id"]!.ToString();
-            mod.LogoURL = parsedData["logo"]!.ToString();
-            mod.LastUpdated = parsedData["updated_at"]!.ToString();
+            mod.Downloads        = (long)parsedData["downloads"]!;
+            mod.ID               = (string)parsedData["id"]!;
+            mod.LogoURL          = (string)parsedData["logo"]!;
+            mod.LastUpdated      = (string)parsedData["updated_at"]!;
             
             //TODO: This should be a list of versions, for version selection
-            if (parsedData["versions"]!.Count() != 0) mod.DownloadURL = $"https://api.ficsit.app{parsedData["versions"]![0]!["link"]!}";
+            // if (parsedData["versions"]!.Any()) mod.DownloadURL = $"https://api.ficsit.app{parsedData["versions"]![0]!["link"]!}";
+            if (parsedData["versions"]!.Any())
+            {
+                mod.DownloadURL = $"https://api.ficsit.app{parsedData["versions"]![0]!["link"]!}";
+            }
             return mod;
         }
 
@@ -69,15 +75,18 @@ namespace FicsitExplorer
          */
         public bool DownloadMod(string url)
         {
-            /*
-             *     - download mod using given URL
-             *     - save file to disk at download URL
-             */
+            ModFile modFile;
+            try
+            {
+                modFile = _apiInteractor.DownloadMod(url);
+            }
+            catch
+            {
+                return false;
+            }
+            File.WriteAllBytes($"C:\\{modFile.FileName}", modFile.Data);
             
-            
-            
-            
-            return false;
+            return true;
         }
     }
 }

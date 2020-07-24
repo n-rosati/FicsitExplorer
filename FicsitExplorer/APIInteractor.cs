@@ -2,19 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using RestSharp;
 using SAHB.GraphQLClient.Executor;
 
 namespace FicsitExplorer
 {
     public class APIInteractor
     {
+        private IRestClient _client;
+        private string BaseURL = "https://api.ficsit.app";
+
+        public APIInteractor()
+        {
+            _client = new RestClient(BaseURL);
+        }
+        
         private string MakeQuery(string query)
         {
             IGraphQLHttpExecutor executor = new GraphQLHttpExecutor();
             string returnString;
             try
             {
-                returnString = JObject.Parse(executor.ExecuteQuery(query, "https://api.ficsit.app/v2/query", System.Net.Http.HttpMethod.Post).Result.Response).SelectToken("data", false)!.ToString();
+                returnString = JObject.Parse(executor.ExecuteQuery(query, $"{BaseURL}/v2/query", System.Net.Http.HttpMethod.Post).Result.Response).SelectToken("data", false)!.ToString();
             }
             catch
             {
@@ -77,6 +86,14 @@ namespace FicsitExplorer
             }
 
             return modCount;
+        }
+
+        public ModFile DownloadMod(string url)
+        {
+            //TODO: Error checking. Lots.
+            IRestResponse response = _client.Get(new RestRequest(url));
+            if (!response.IsSuccessful) throw new Exception("Download failed.");
+            return new ModFile { Data = response.RawBytes, FileName = response.Headers[3].Value.ToString().Split('/')[2]};
         }
     }
 }

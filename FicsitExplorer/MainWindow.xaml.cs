@@ -45,7 +45,15 @@ namespace FicsitExplorer
          */
         private void DownloadMod(object sender, RoutedEventArgs e)
         {
-            Manager.DownloadMod(null);
+            try
+            {
+                Manager.DownloadMod((LvMods.SelectedItem as Mod).DownloadURL);
+            }
+            catch
+            {
+                //TODO: Alert popup instead
+                Console.WriteLine("Could not download mod.");
+            }
         }
     }
 }
