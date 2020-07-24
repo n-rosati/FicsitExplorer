@@ -40,11 +40,11 @@ namespace FicsitExplorer
         {
             int modCount = GetModsCount();
             List<JToken> mods = new List<JToken>();
+            //The API only sends back 100 mods when you request getMods
             for (int i = 0; i < (modCount / 100) + 1; i++)
             {
                 string response =
-                    MakeQuery(
-                        $"{{\"query\":\"query {{getMods (filter: {{limit: 100 offset: {i * 100}}}){{count mods {{name short_description downloads id logo}}}}}}\"}}");
+                    MakeQuery($"{{\"query\":\"query {{getMods (filter: {{limit: 100 offset: {i * 100}}}){{count mods {{id name short_description logo downloads updated_at versions(filter: {{limit: 1}}){{link}}}}}}}}\"}}");
                 try
                 {
                     mods.AddRange(JObject.Parse(response)["getMods"]!["mods"]!.ToList());

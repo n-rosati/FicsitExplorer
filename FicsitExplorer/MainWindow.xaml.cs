@@ -22,7 +22,7 @@ namespace FicsitExplorer
             //TODO: Allow user to set sorting method
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(LvMods.ItemsSource);
             view.SortDescriptions.Add(new SortDescription("Downloads", ListSortDirection.Descending));
-
+            
             WindowPane = this;
         }
 

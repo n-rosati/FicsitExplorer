@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.VisualBasic.CompilerServices;
+using System.Linq;
 using Newtonsoft.Json.Linq;
-using RestSharp;
 
 namespace FicsitExplorer
 {
@@ -13,8 +12,7 @@ namespace FicsitExplorer
         public List<Mod> ModList { get; }
         private static ModManager _instance;
         private readonly APIInteractor _apiInteractor;
-        public string _downloadPath { get; set; }
-        private readonly RestClient _client = new RestClient("https://api.ficsit.app");
+        public string DownloadPath { get; set; }
 
         private ModManager()
         {
@@ -22,7 +20,7 @@ namespace FicsitExplorer
             _apiInteractor = new APIInteractor();
 
             string homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + Path.DirectorySeparatorChar;
-            _downloadPath = Directory.Exists(homeFolder) ? homeFolder + "Downloads" : homeFolder; //Download path is downloads folder or home folder as fallback
+            DownloadPath = Directory.Exists(homeFolder) ? homeFolder + "Downloads" : homeFolder; //Download path is downloads folder or home folder as fallback
         }
 
         /**
@@ -54,10 +52,14 @@ namespace FicsitExplorer
             JObject parsedData = JObject.Parse(info);
             mod.Name = parsedData["name"]!.ToString();
             mod.ShortDescription = parsedData["short_description"]!.ToString();
-            mod.Downloads = LongType.FromString(parsedData["downloads"]!.ToString());
+            //TODO: Figure out why full_description breaks the JSON parsing
+            mod.Downloads = (long)parsedData["downloads"]!;
             mod.ID = parsedData["id"]!.ToString();
             mod.LogoURL = parsedData["logo"]!.ToString();
-            //TODO: Use all fields gotten by query
+            mod.LastUpdated = parsedData["updated_at"]!.ToString();
+            
+            //TODO: This should be a list of versions, for version selection
+            if (parsedData["versions"]!.Count() != 0) mod.DownloadURL = $"https://api.ficsit.app{parsedData["versions"]![0]!["link"]!}";
             return mod;
         }
 
@@ -65,11 +67,11 @@ namespace FicsitExplorer
          * Downloads a Mod to the user's Downloads directory (if it exists, else user home directory)
          * Returns true on success, false otherwise
          */
-        public bool DownloadMod(string URL)
+        public bool DownloadMod(string url)
         {
             /*
              *     - download mod using given URL
-             *     - save file to disk
+             *     - save file to disk at download URL
              */
             
             

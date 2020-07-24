@@ -16,7 +16,7 @@
                 <GridView AllowsColumnReorder="False">
                     <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}" />
                     <GridViewColumn Header="Downloads" Width="100" DisplayMemberBinding="{Binding Downloads}" />
-                    <GridViewColumn Header="Description" Width="570" DisplayMemberBinding="{Binding Description}" />
+                    <GridViewColumn Header="Description" Width="570" DisplayMemberBinding="{Binding ShortDescription}" />
                 </GridView>
             </ListView.View>
             <ListView.ItemContainerStyle>
