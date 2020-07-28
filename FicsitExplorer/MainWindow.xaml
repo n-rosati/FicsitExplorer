@@ -5,36 +5,53 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FicsitExplorer"
         mc:Ignorable="d"
-        Title="Ficsit Explorer" Height="800" Width="1280" ResizeMode="NoResize">
+        Title="Ficsit Explorer" Height="800" MinHeight="600" Width="1280" MinWidth="600" ResizeMode="CanResizeWithGrip">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <ListView Grid.Column="0" Name="LvMods" Width="850">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="Edit Download Location" Click="SetDownloadLocation_OnClick" />
+                <Separator />
+                <MenuItem Header="Exit" Click="Exit_OnClick"/>
+            </MenuItem>
+            <MenuItem Header="Help" Click="Help_OnClick"/>
+        </Menu>
+
+        <!-- Mod list -->
+        <ListView Grid.Column="0" Name="LvMods" Grid.Row="1">
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
                     <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}" />
                     <GridViewColumn Header="Downloads" Width="100" DisplayMemberBinding="{Binding Downloads}" />
-                    <GridViewColumn Header="Description" Width="570" DisplayMemberBinding="{Binding ShortDescription}" />
+                    <GridViewColumn Header="Description" Width="Auto" DisplayMemberBinding="{Binding ShortDescription}" />
                 </GridView>
             </ListView.View>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
-                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SetModDetails"/>
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SetModDetails" />
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <Grid Grid.Column="1">
+
+        <!-- Mod details view -->
+        <Grid Grid.Column="1" Grid.Row="1">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="500"/>
+                    <RowDefinition Height="500" />
                     <RowDefinition />
-                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40" />
                 </Grid.RowDefinitions>
-                <Image Name="LogoImage" Source="" Stretch="Uniform" Grid.Row="0" VerticalAlignment="Top"/>
-                <TextBlock Name="ModDescription" Grid.Row="1" Text="" Padding="20px" TextWrapping="Wrap"/>
-                <Button Name="DownloadButton" Content="Download" Click="DownloadMod" Grid.Row="2" IsEnabled="False"/>
+                <Image Name="LogoImage" Source="" Stretch="Uniform" Grid.Row="0" VerticalAlignment="Top" />
+                <TextBlock Name="ModDescription" Grid.Row="1" Text="" Padding="20px" TextWrapping="Wrap" />
+                <Button Name="DownloadButton" Content="Download" Click="DownloadMod" Grid.Row="2" IsEnabled="False" />
             </Grid>
         </Grid>
     </Grid>

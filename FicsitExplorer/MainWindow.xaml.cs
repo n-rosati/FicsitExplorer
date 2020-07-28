@@ -29,7 +29,7 @@ namespace FicsitExplorer
         //Event handlers
         
         /**
-         * Sets the details pane with the selected mod details
+         * Sets theSetDownloadLocation_OnClickcted mod details
          */
         private void SetModDetails(object sender, MouseButtonEventArgs e)
         {
@@ -54,6 +54,30 @@ namespace FicsitExplorer
                 //TODO: Alert popup instead
                 Console.WriteLine("Could not download mod.");
             }
+        }
+
+        private void SetDownloadLocation_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+
+            /*TODO:
+             * - Pop up window with text field
+             * - Put current download location in field
+             * - On window close, verify location and set download locaiton
+             */
+
+            // Manager.DownloadPath = <New path>;
+        }
+
+        private void Exit_OnClick(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void Help_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+            //TODO: Show a popup on how to use the program
         }
     }
 }
