@@ -55,6 +55,8 @@ namespace FicsitExplorer
             mod.ShortDescription = (string)parsedData["short_description"]!;
             // mod.FullDescription  = (string)parsedData["full_description"]!;
             //TODO: Figure out why full_description breaks the JSON parsing
+            //Might be because of the JSON parser used, I don't think I'm using the Newtonsoft JSON parser and that _could_ fix it
+            
             mod.Downloads        = (long)parsedData["downloads"]!;
             mod.ID               = (string)parsedData["id"]!;
             mod.LogoURL          = (string)parsedData["logo"]!;
@@ -75,6 +77,7 @@ namespace FicsitExplorer
          */
         public bool DownloadMod(string url)
         {
+            //TODO: Run the downloader on another thread to prevent pausing on the main UI
             ModFile modFile;
             try
             {
@@ -84,7 +87,7 @@ namespace FicsitExplorer
             {
                 return false;
             }
-            File.WriteAllBytes($"C:\\{modFile.FileName}", modFile.Data);
+            File.WriteAllBytes($"C:\\Users\\Nicholas\\Downloads\\{modFile.FileName}", modFile.Data);
             
             return true;
         }

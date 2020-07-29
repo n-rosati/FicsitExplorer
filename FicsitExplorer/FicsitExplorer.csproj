@@ -12,4 +12,16 @@
       <PackageReference Include="SAHB.GraphQL.Client" Version="2.3.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Page Update="DownloadLocation.xaml">
+        <Generator></Generator>
+      </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="DownloadLocation.xaml.cs">
+        <DependentUpon>DownloadLocation.xaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

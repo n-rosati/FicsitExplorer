@@ -58,15 +58,7 @@ namespace FicsitExplorer
 
         private void SetDownloadLocation_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
-
-            /*TODO:
-             * - Pop up window with text field
-             * - Put current download location in field
-             * - On window close, verify location and set download locaiton
-             */
-
-            // Manager.DownloadPath = <New path>;
+            new DownloadLocation().ShowDialog();
         }
 
         private void Exit_OnClick(object sender, RoutedEventArgs e)
