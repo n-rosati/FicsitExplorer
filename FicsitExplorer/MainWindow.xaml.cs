@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace FicsitExplorer
@@ -26,20 +25,6 @@ namespace FicsitExplorer
             WindowPane = this;
         }
 
-        //Event handlers
-        
-        /**
-         * Sets theSetDownloadLocation_OnClickcted mod details
-         */
-        private void SetModDetails(object sender, MouseButtonEventArgs e)
-        {
-            Mod mod = (Mod)((ListViewItem) sender).Content;
-            
-            LogoImage.Source = new BitmapImage(new Uri(mod.LogoURL));
-            ModDescription.Text = mod.ShortDescription;
-            DownloadButton.IsEnabled = true;
-        }
-
         /**
          * Downloads the selected mod to the user's Downloads folder
          */
@@ -56,6 +41,17 @@ namespace FicsitExplorer
             }
         }
 
+        //Event handlers
+
+        private void SetModDetails(object sender, SelectionChangedEventArgs e)
+        {
+            Mod mod = (Mod) (((ListView) sender).SelectedItem);
+            
+            LogoImage.Source = new BitmapImage(new Uri(mod.LogoURL));
+            ModDescription.Text = mod.ShortDescription;
+            DownloadButton.IsEnabled = true;
+        }
+        
         private void SetDownloadLocation_OnClick(object sender, RoutedEventArgs e)
         {
             new DownloadLocation().ShowDialog();
