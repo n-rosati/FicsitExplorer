@@ -75,21 +75,11 @@ namespace FicsitExplorer
          * Downloads a Mod to the user's Downloads directory (if it exists, else user home directory)
          * Returns true on success, false otherwise
          */
-        public bool DownloadMod(string url)
+        public void DownloadMod(string url)
         {
             //TODO: Run the downloader on another thread to prevent pausing on the main UI
-            ModFile modFile;
-            try
-            {
-                modFile = _apiInteractor.DownloadMod(url);
-            }
-            catch
-            {
-                return false;
-            }
-            File.WriteAllBytes($"C:\\Users\\Nicholas\\Downloads\\{modFile.FileName}", modFile.Data);
-            
-            return true;
+            ModFile modFile = _apiInteractor.DownloadMod(url);
+            File.WriteAllBytes($"{DownloadPath}\\{modFile.FileName}", modFile.Data);
         }
     }
 }

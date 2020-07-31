@@ -9,20 +9,17 @@ namespace FicsitExplorer
 {
     public partial class MainWindow : Window
     {
-        public static MainWindow WindowPane { get; set; }
-        private ModManager Manager;
+        private readonly ModManager _manager;
         public MainWindow()
         {
             InitializeComponent();
-            Manager = ModManager.GetInstance();
-            Manager.PopulateMods();
+            _manager = ModManager.GetInstance();
+            _manager.PopulateMods();
             
-            LvMods.ItemsSource = Manager.ModList;
+            LvMods.ItemsSource = _manager.ModList;
             //TODO: Allow user to set sorting method
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(LvMods.ItemsSource);
             view.SortDescriptions.Add(new SortDescription("Downloads", ListSortDirection.Descending));
-            
-            WindowPane = this;
         }
 
         /**
@@ -32,12 +29,11 @@ namespace FicsitExplorer
         {
             try
             {
-                Manager.DownloadMod((LvMods.SelectedItem as Mod).DownloadURL);
+                _manager.DownloadMod((LvMods.SelectedItem as Mod).DownloadURL);
             }
             catch
             {
-                //TODO: Alert popup instead
-                Console.WriteLine("Could not download mod.");
+                MessageBox.Show($"Could not download mod.\n\n{e}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -45,7 +41,7 @@ namespace FicsitExplorer
 
         private void SetModDetails(object sender, SelectionChangedEventArgs e)
         {
-            Mod mod = (Mod) (((ListView) sender).SelectedItem);
+            Mod mod = (Mod)((ListView)sender).SelectedItem;
             
             LogoImage.Source = new BitmapImage(new Uri(mod.LogoURL));
             ModDescription.Text = mod.ShortDescription;
@@ -54,18 +50,13 @@ namespace FicsitExplorer
         
         private void SetDownloadLocation_OnClick(object sender, RoutedEventArgs e)
         {
+            //I want this to be a native folder picker but don't know how to make it
             new DownloadLocation().ShowDialog();
         }
 
         private void Exit_OnClick(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
-        }
-
-        private void Help_OnClick(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-            //TODO: Show a popup on how to use the program
         }
     }
 }
