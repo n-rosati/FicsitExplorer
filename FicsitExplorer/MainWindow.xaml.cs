@@ -10,6 +10,7 @@ using System.Windows.Media.Imaging;
 using System.Xaml;
 using Markdig;
 using Markdig.Wpf;
+using Markdown = Markdig.Wpf.Markdown;
 using XamlReader = System.Windows.Markup.XamlReader;
 
 namespace FicsitExplorer
@@ -17,15 +18,16 @@ namespace FicsitExplorer
     public partial class MainWindow : Window
     {
         private readonly ModManager _manager;
+
         public MainWindow()
         {
             InitializeComponent();
             _manager = ModManager.GetInstance();
             _manager.PopulateMods();
-            
+
             LvMods.ItemsSource = _manager.ModList;
             //TODO: Allow user to set sorting method
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(LvMods.ItemsSource);
+            CollectionView view = (CollectionView) CollectionViewSource.GetDefaultView(LvMods.ItemsSource);
             view.SortDescriptions.Add(new SortDescription("Downloads", ListSortDirection.Descending));
         }
 
@@ -51,20 +53,19 @@ namespace FicsitExplorer
          */
         private void SetModDetails(object sender, SelectionChangedEventArgs e)
         {
-            Mod mod = (Mod)((ListView)sender).SelectedItem;
-            
+            Mod mod = (Mod) ((ListView) sender).SelectedItem;
+
             LogoImage.Source = new BitmapImage(new Uri(mod.LogoURL));
             DownloadButton.IsEnabled = true;
 
             //Source: https://github.com/Kryptos-FR/markdig.wpf/blob/master/src/Markdig.Xaml.SampleApp/MainWindow.xaml.cs#L36
-            using MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(Markdig.Wpf.Markdown.ToXaml(mod.FullDescription, new MarkdownPipelineBuilder().UseSupportedExtensions().Build())));
+            using MemoryStream stream =
+                new MemoryStream(Encoding.UTF8.GetBytes(
+                                     Markdown.ToXaml(mod.FullDescription, new MarkdownPipelineBuilder().UseSupportedExtensions().Build())));
             using XamlXmlReader reader = new XamlXmlReader(stream, new XamlSchemaContext());
-            if (XamlReader.Load(reader) is FlowDocument document)
-            {
-                ModDescription.Document = document;
-            }
+            if (XamlReader.Load(reader) is FlowDocument document) ModDescription.Document = document;
         }
-        
+
         private void SetDownloadLocation_OnClick(object sender, RoutedEventArgs e)
         {
             //TODO: I want this to be a native folder picker but don't know how to make it

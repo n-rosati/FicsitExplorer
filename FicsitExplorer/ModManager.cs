@@ -36,7 +36,7 @@ namespace FicsitExplorer
          */
         public void PopulateMods()
         {
-            List<JToken> mods = _apiInteractor.GetModList();
+            IEnumerable<JToken> mods = _apiInteractor.GetModList();
             foreach (JToken token in mods)
             {
                 ModList.Add(CreateModFromJSON(token.ToString()));
@@ -46,7 +46,7 @@ namespace FicsitExplorer
         /**
          * Creates a mod given inputted JSON describing it
          */
-        private Mod CreateModFromJSON(string info)
+        private static Mod CreateModFromJSON(string info)
         {
             Mod mod = new Mod();
             JObject parsedData   = JObject.Parse(info);

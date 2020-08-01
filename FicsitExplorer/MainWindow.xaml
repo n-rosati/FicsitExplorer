@@ -18,7 +18,7 @@
 
         <Menu Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
             <MenuItem Header="Edit Download Location" Click="SetDownloadLocation_OnClick" />
-            <MenuItem Header="Exit" Click="Exit_OnClick"/>
+            <MenuItem Header="Exit" Click="Exit_OnClick" />
         </Menu>
 
         <!-- Mod list -->
