@@ -53,7 +53,7 @@ namespace FicsitExplorer
             
             mod.Name             = (string)parsedData["name"]!;
             mod.ShortDescription = (string)parsedData["short_description"]!;
-            // mod.FullDescription  = (string)parsedData["full_description"]!;
+            mod.FullDescription  = (string)parsedData["full_description"]!;
             //TODO: Figure out why full_description breaks the JSON parsing
             //Might be because of the JSON parser used, I don't think I'm using the Newtonsoft JSON parser and that _could_ fix it
             

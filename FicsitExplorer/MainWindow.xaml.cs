@@ -1,9 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Media.Imaging;
+using System.Xaml;
+using Markdig;
+using Markdig.Wpf;
+using XamlReader = System.Windows.Markup.XamlReader;
 
 namespace FicsitExplorer
 {
@@ -29,7 +36,7 @@ namespace FicsitExplorer
         {
             try
             {
-                _manager.DownloadMod((LvMods.SelectedItem as Mod).DownloadURL);
+                _manager.DownloadMod((LvMods.SelectedItem as Mod)!.DownloadURL);
             }
             catch
             {
@@ -39,18 +46,28 @@ namespace FicsitExplorer
 
         //Event handlers
 
+        /**
+         * Sets the mod description to a markdown formatted document
+         */
         private void SetModDetails(object sender, SelectionChangedEventArgs e)
         {
             Mod mod = (Mod)((ListView)sender).SelectedItem;
             
             LogoImage.Source = new BitmapImage(new Uri(mod.LogoURL));
-            ModDescription.Text = mod.ShortDescription;
             DownloadButton.IsEnabled = true;
+
+            //Source: https://github.com/Kryptos-FR/markdig.wpf/blob/master/src/Markdig.Xaml.SampleApp/MainWindow.xaml.cs#L36
+            using MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(Markdig.Wpf.Markdown.ToXaml(mod.FullDescription, new MarkdownPipelineBuilder().UseSupportedExtensions().Build())));
+            using XamlXmlReader reader = new XamlXmlReader(stream, new XamlSchemaContext());
+            if (XamlReader.Load(reader) is FlowDocument document)
+            {
+                ModDescription.Document = document;
+            }
         }
         
         private void SetDownloadLocation_OnClick(object sender, RoutedEventArgs e)
         {
-            //I want this to be a native folder picker but don't know how to make it
+            //TODO: I want this to be a native folder picker but don't know how to make it
             new DownloadLocation().ShowDialog();
         }
 

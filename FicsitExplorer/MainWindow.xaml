@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FicsitExplorer"
         mc:Ignorable="d"
-        Title="Ficsit Explorer" Height="800" MinHeight="600" Width="1280" MinWidth="600" ResizeMode="CanResizeWithGrip">
+        Title="Ficsit Explorer" Height="800" MinHeight="600" Width="1600" MinWidth="600" ResizeMode="CanResizeWithGrip">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
@@ -36,12 +36,12 @@
         <Grid Grid.Column="1" Grid.Row="1">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="500" />
-                    <RowDefinition />
-                    <RowDefinition Height="40" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="0.15*" />
                 </Grid.RowDefinitions>
                 <Image Name="LogoImage" Source="" Stretch="Uniform" Grid.Row="0" VerticalAlignment="Top" />
-                <TextBlock Name="ModDescription" Grid.Row="1" Text="" Padding="20px" TextWrapping="Wrap" />
+                <FlowDocumentScrollViewer Name="ModDescription" Grid.Row="1" />
                 <Button Name="DownloadButton" Content="Download" Click="DownloadMod" Grid.Row="2" IsEnabled="False" />
             </Grid>
         </Grid>

@@ -52,16 +52,14 @@ namespace FicsitExplorer
             //The API only sends back 100 mods when you request getMods
             for (int i = 0; i < (modCount / 100) + 1; i++)
             {
-                string response =
-                    MakeQuery($"{{\"query\":\"query {{getMods (filter: {{limit: 100 offset: {i * 100}}}){{count mods {{id name short_description logo downloads updated_at versions(filter: {{limit: 1}}){{link}}}}}}}}\"}}");
+                string response = MakeQuery($"{{\"query\":\"query {{getMods (filter: {{limit: 100 offset: {i * 100}}}){{count mods {{id name short_description full_description logo downloads updated_at versions(filter: {{limit: 1}}){{link}}}}}}}}\"}}");
                 try
                 {
                     mods.AddRange(JObject.Parse(response)["getMods"]!["mods"]!.ToList());
                 }
                 catch (NullReferenceException)
                 {
-                    throw new Exception(
-                        $"Could not find \"getMods\" or \"mods\" fields in server response. Server sent:\n{response}");
+                    throw new Exception($"Could not find \"getMods\" or \"mods\" fields in server response. Server sent:\n{response}");
                 }
             }
 
