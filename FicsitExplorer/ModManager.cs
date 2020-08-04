@@ -59,14 +59,14 @@ namespace FicsitExplorer
             
             mod.Downloads        = (long)parsedData["downloads"]!;
             mod.ID               = (string)parsedData["id"]!;
-            mod.LogoURL          = (string)parsedData["logo"]!;
+            mod.LogoURL          = new Uri(((string)parsedData["logo"]!)!);
             mod.LastUpdated      = (string)parsedData["updated_at"]!;
             
             //TODO: This should be a list of versions, for version selection
             // if (parsedData["versions"]!.Any()) mod.DownloadURL = $"https://api.ficsit.app{parsedData["versions"]![0]!["link"]!}";
             if (parsedData["versions"]!.Any())
             {
-                mod.DownloadURL = $"https://api.ficsit.app{parsedData["versions"]![0]!["link"]!}";
+                mod.DownloadURL = $"https://api.ficsit.app{parsedData["versions"]!.First!["link"]!}";
             }
             return mod;
         }
