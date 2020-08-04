@@ -25,8 +25,8 @@
         <ListView Grid.Column="0" Name="LvMods" Grid.Row="1" SelectionChanged="SetModDetails">
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
-                    <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}" />
-                    <GridViewColumn Header="Downloads" Width="100" DisplayMemberBinding="{Binding Downloads}" />
+                    <GridViewColumn Header="Name" Width="Auto" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Downloads" Width="80" DisplayMemberBinding="{Binding Downloads}" />
                     <GridViewColumn Header="Description" Width="Auto" DisplayMemberBinding="{Binding ShortDescription}" />
                 </GridView>
             </ListView.View>
@@ -38,9 +38,9 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*" />
                     <RowDefinition Height="2*" />
-                    <RowDefinition Height="0.15*" />
+                    <RowDefinition Height="0.1*" />
                 </Grid.RowDefinitions>
-                <Image Name="LogoImage" Source="" Stretch="Uniform" Grid.Row="0" VerticalAlignment="Top" />
+                <Image Name="LogoImage" Source="" Stretch="Uniform" Grid.Row="0" />
                 <FlowDocumentScrollViewer Name="ModDescription" Grid.Row="1" />
                 <Button Name="DownloadButton" Content="Download" Click="DownloadMod" Grid.Row="2" IsEnabled="False" />
             </Grid>

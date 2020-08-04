@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace FicsitExplorer
@@ -14,8 +15,17 @@ namespace FicsitExplorer
 
         private void Save_OnClick(object sender, RoutedEventArgs e)
         {
-            //TODO: Path validation
-            ModManager.GetInstance().DownloadPath = ((TextBox) ((Grid) Content).Children[0]).Text;
+            string path = ((TextBox) ((Grid) Content).Children[0]).Text;
+
+            if (!Directory.Exists(path))
+            {
+                MessageBox.Show("Invalid path.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                ModManager.GetInstance().DownloadPath = path;
+            }
+        
             Hide();
         }
     }
