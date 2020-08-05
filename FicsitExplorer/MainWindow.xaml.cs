@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -54,7 +55,7 @@ namespace FicsitExplorer
         {
             Mod mod = (Mod) ((ListView) sender).SelectedItem;
 
-            LogoImage.Source = new BitmapImage(mod.LogoURL);
+            LogoImage.Source = new BitmapImage(new Uri(mod.LogoURL == "" ? "file://resources/image_not_found.png" : mod.LogoURL)); //TODO: Needs testing
             DownloadButton.IsEnabled = true;
 
             //Source: https://github.com/Kryptos-FR/markdig.wpf/blob/master/src/Markdig.Xaml.SampleApp/MainWindow.xaml.cs#L36

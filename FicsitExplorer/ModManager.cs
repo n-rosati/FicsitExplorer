@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using RestSharp;
 
 namespace FicsitExplorer
 {
@@ -56,7 +57,7 @@ namespace FicsitExplorer
             mod.FullDescription  = (string)parsedData["full_description"]!;
             mod.Downloads        = (long)parsedData["downloads"]!;
             mod.ID               = (string)parsedData["id"]!;
-            mod.LogoURL          = new Uri(((string)parsedData["logo"]!)!);
+            mod.LogoURL          = (string)parsedData["logo"]!;
             mod.LastUpdated      = (string)parsedData["updated_at"]!;
             
             //TODO: This should be a list of versions, for version selection
@@ -75,8 +76,9 @@ namespace FicsitExplorer
         public void DownloadMod(string url)
         {
             //TODO: Run the downloader on another thread to prevent pausing on the main UI
-            ModFile modFile = _apiInteractor.DownloadMod(url);
-            File.WriteAllBytes($"{DownloadPath}\\{modFile.FileName}", modFile.Data);
+            IRestResponse response = APIInteractor.Client.Get(new RestRequest(url));
+			if (!response.IsSuccessful) throw new Exception("Download failed.");
+            File.WriteAllBytes($"{DownloadPath}\\{response.Headers[3].Value!.ToString()!.Split('/')[2]}", response.RawBytes);
         }
     }
 }

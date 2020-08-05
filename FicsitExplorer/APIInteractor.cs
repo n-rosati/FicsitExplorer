@@ -12,12 +12,7 @@ namespace FicsitExplorer
     public class APIInteractor
     {
         private const string BaseURL = "https://api.ficsit.app";
-        private readonly IRestClient _client;
-
-        public APIInteractor()
-        {
-            _client = new RestClient(BaseURL);
-        }
+        public static readonly IRestClient Client = new RestClient(BaseURL);
 
         private static string MakeQuery(string query)
         {
@@ -81,14 +76,6 @@ namespace FicsitExplorer
             }
 
             return modCount;
-        }
-
-        public ModFile DownloadMod(string url)
-        {
-            //TODO: Error checking. Lots.
-            IRestResponse response = _client.Get(new RestRequest(url));
-            if (!response.IsSuccessful) throw new Exception("Download failed.");
-            return new ModFile { Data = response.RawBytes, FileName = response.Headers[3].Value.ToString().Split('/')[2]};
         }
     }
 }
