@@ -31,4 +31,9 @@
       </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="resources\image_not_found.png" />
+      <EmbeddedResource Include="resources\image_not_found.png" />
+    </ItemGroup>
+
 </Project>

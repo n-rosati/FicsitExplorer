@@ -11,8 +11,8 @@ namespace FicsitExplorer
 {
     public class APIInteractor
     {
-        private const string BaseURL = "https://api.ficsit.app";
-        public static readonly IRestClient Client = new RestClient(BaseURL);
+        internal const string BaseURL = "api.ficsit.app";
+        public static readonly IRestClient Client = new RestClient("https://" + BaseURL);
 
         private static string MakeQuery(string query)
         {
@@ -21,7 +21,7 @@ namespace FicsitExplorer
             try
             {
                 returnString =
-                    JObject.Parse(executor.ExecuteQuery(query, $"{BaseURL}/v2/query", HttpMethod.Post).Result.Response)
+                    JObject.Parse(executor.ExecuteQuery(query, $"https://{BaseURL}/v2/query", HttpMethod.Post).Result.Response)
                            .SelectToken("data", false)!.ToString();
             }
             catch

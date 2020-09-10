@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,13 +23,39 @@ namespace FicsitExplorer
         public MainWindow()
         {
             InitializeComponent();
-            _manager = ModManager.GetInstance();
-            _manager.PopulateMods();
 
-            LvMods.ItemsSource = _manager.ModList;
-            //TODO: Allow user to set sorting method
-            CollectionView view = (CollectionView) CollectionViewSource.GetDefaultView(LvMods.ItemsSource);
-            view.SortDescriptions.Add(new SortDescription("Downloads", ListSortDirection.Descending));
+            if (internetState())
+            {
+                _manager = ModManager.GetInstance();
+                _manager.PopulateMods();
+
+                LvMods.ItemsSource = _manager.ModList;
+                //TODO: Allow user to set sorting method
+                CollectionView view = (CollectionView) CollectionViewSource.GetDefaultView(LvMods.ItemsSource);
+                view.SortDescriptions.Add(new SortDescription("Downloads", ListSortDirection.Descending));
+            }
+            else
+            {
+                MessageBox.Show(
+                    "Could not connect to API server, please check connection to ficsit.app. Application will now exit",
+                    "Network Error", MessageBoxButton.OK);
+                    Application.Current.Shutdown();
+            }
+        }
+
+        bool internetState()
+        {
+            bool ping = false;
+            try
+            {
+                ping = new Ping().Send("api.ficsit.app")!.Status == IPStatus.Success;
+            }
+            catch
+            {
+                ping = false;
+            }
+
+            return ping;
         }
 
         /**
@@ -55,10 +82,11 @@ namespace FicsitExplorer
         {
             Mod mod = (Mod) ((ListView) sender).SelectedItem;
 
-            LogoImage.Source = new BitmapImage(new Uri(mod.LogoURL == "" ? "file://resources/image_not_found.png" : mod.LogoURL)); //TODO: Needs testing
+            LogoImage.Source = new BitmapImage(new Uri(mod.LogoURL == "" ? "file://image_not_found.png" : mod.LogoURL)); //TODO: Needs testing
             DownloadButton.IsEnabled = true;
 
             //Source: https://github.com/Kryptos-FR/markdig.wpf/blob/master/src/Markdig.Xaml.SampleApp/MainWindow.xaml.cs#L36
+            //Sets the mod details view with the markdown rendered content
             using MemoryStream stream =
                 new MemoryStream(Encoding.UTF8.GetBytes(
                                      Markdown.ToXaml(mod.FullDescription, new MarkdownPipelineBuilder().UseSupportedExtensions().Build())));

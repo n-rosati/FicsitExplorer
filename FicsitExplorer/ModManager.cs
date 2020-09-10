@@ -12,13 +12,13 @@ namespace FicsitExplorer
     {
         public List<Mod> ModList { get; }
         private static ModManager _instance;
-        private readonly APIInteractor _apiInteractor;
+        public readonly APIInteractor APIInteractor;
         public string DownloadPath { get; set; }
 
         private ModManager()
         {
             ModList = new List<Mod>();
-            _apiInteractor = new APIInteractor();
+            APIInteractor = new APIInteractor();
 
             string homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + Path.DirectorySeparatorChar;
             DownloadPath = Directory.Exists(homeFolder) ? homeFolder + "Downloads" : homeFolder; //Download path is downloads folder or home folder as fallback
@@ -37,7 +37,7 @@ namespace FicsitExplorer
          */
         public void PopulateMods()
         {
-            IEnumerable<JToken> mods = _apiInteractor.GetModList();
+            IEnumerable<JToken> mods = APIInteractor.GetModList();
             foreach (JToken token in mods)
             {
                 ModList.Add(CreateModFromJSON(token.ToString()));
