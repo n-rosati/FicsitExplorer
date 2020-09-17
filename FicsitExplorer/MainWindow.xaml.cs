@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xaml;
 using Markdig;
@@ -82,7 +83,15 @@ namespace FicsitExplorer
         {
             Mod mod = (Mod) ((ListView) sender).SelectedItem;
 
-            LogoImage.Source = new BitmapImage(new Uri(mod.LogoURL == "" ? "file://image_not_found.png" : mod.LogoURL)); //TODO: Needs testing
+            if (mod.LogoURL == "")
+            {
+                LogoImage.Source = (ImageSource) new ImageSourceConverter().ConvertFrom(Properties.Resources.NotFound);
+            }
+            else
+            {
+                LogoImage.Source = new BitmapImage(new Uri(mod.LogoURL));
+            }
+            
             DownloadButton.IsEnabled = true;
 
             //Source: https://github.com/Kryptos-FR/markdig.wpf/blob/master/src/Markdig.Xaml.SampleApp/MainWindow.xaml.cs#L36
