@@ -3,6 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="DownloadLocation" Type="System.String" Scope="User">
+      <!--      TODO: Make this not the default-->
       <Value Profile="(Default)">C:\Users\Nicholas\Desktop</Value>
     </Setting>
   </Settings>

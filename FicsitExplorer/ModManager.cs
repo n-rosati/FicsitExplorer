@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using FicsitExplorer.Properties;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
@@ -13,15 +15,33 @@ namespace FicsitExplorer
         public List<Mod> ModList { get; }
         private static ModManager _instance;
         public readonly APIInteractor APIInteractor;
-        public string DownloadPath { get; set; }
+
+        public string DownloadPath
+        {
+            get => Settings.Default.DownloadLocation;
+            set => Settings.Default.DownloadLocation = value;
+        }
 
         private ModManager()
         {
             ModList = new List<Mod>();
             APIInteractor = new APIInteractor();
 
-            string homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + Path.DirectorySeparatorChar;
-            DownloadPath = Directory.Exists(homeFolder) ? homeFolder + "Downloads" : homeFolder; //Download path is downloads folder or home folder as fallback
+            /*TODO: Test. I wrote this tired.
+                    -I think the best way is to default to "" and if Settings.Default.DownloadLocation == "" then prompt to set location, else use Settings.Default.DownloadLocation*/
+            if (Directory.Exists(Settings.Default.DownloadLocation))
+            {
+                DownloadPath = Settings.Default.DownloadLocation;
+            }
+            else
+            {
+                string homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) +
+                                    Path.DirectorySeparatorChar;
+                DownloadPath =
+                    Directory.Exists(homeFolder)
+                        ? homeFolder + "Downloads"
+                        : homeFolder; //Download path is downloads folder or home folder as fallback
+            }
         }
 
         /**
@@ -73,9 +93,10 @@ namespace FicsitExplorer
          * Downloads a Mod to the user's Downloads directory (if it exists, else user home directory)
          * Returns true on success, false otherwise
          */
+        [SuppressMessage("ReSharper.DPA", "DPA0001: Memory allocation issues")]
         public void DownloadMod(string url)
         {
-            //TODO: Run the downloader on another thread to prevent pausing on the main UI
+            //TODO: Run the downloader on another thread to prevent pausing on the main thread
             IRestResponse response = APIInteractor.Client.Get(new RestRequest(url));
 			if (!response.IsSuccessful) throw new Exception("Download failed.");
             File.WriteAllBytes($"{DownloadPath}\\{response.Headers[3].Value!.ToString()!.Split('/')[2]}", response.RawBytes);
