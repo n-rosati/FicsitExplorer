@@ -31,7 +31,9 @@
                   CanUserReorderColumns="True"
                   CanUserResizeColumns="True"
                   HeadersVisibility="Column"
-                  CanUserAddRows="False">
+                  CanUserAddRows="False"
+                  VerticalGridLinesBrush="Transparent"
+                  HorizontalGridLinesBrush="DimGray">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Width="Auto" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="Downloads" Width="80" Binding="{Binding Downloads}" />
