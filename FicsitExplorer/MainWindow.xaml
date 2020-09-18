@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FicsitExplorer"
         mc:Ignorable="d"
-        Title="Ficsit Explorer" Height="800" MinHeight="600" Width="1600" MinWidth="600" ResizeMode="CanResizeWithGrip">
+        Title="Ficsit Explorer" Height="900" MinHeight="450" Width="1600" MinWidth="800" ResizeMode="CanResizeWithGrip">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
@@ -21,16 +21,23 @@
             <MenuItem Header="Exit" Click="Exit_OnClick" />
         </Menu>
 
-        <!-- Mod list -->
-        <ListView Grid.Column="0" Name="LvMods" Grid.Row="1" SelectionChanged="SetModDetails">
-            <ListView.View>
-                <GridView AllowsColumnReorder="False">
-                    <GridViewColumn Header="Name" Width="Auto" DisplayMemberBinding="{Binding Name}" />
-                    <GridViewColumn Header="Downloads" Width="80" DisplayMemberBinding="{Binding Downloads}" />
-                    <GridViewColumn Header="Description" Width="Auto" DisplayMemberBinding="{Binding ShortDescription}" />
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <DataGrid Grid.Column="0"
+                  Grid.Row="1"
+                  Name="LvMods"
+                  SelectionChanged="SetModDetails"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="False"
+                  CanUserSortColumns="True"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  HeadersVisibility="Column"
+                  CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Width="Auto" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Downloads" Width="80" Binding="{Binding Downloads}" />
+                <DataGridTextColumn Header="ShortDescription" Width="*" Binding="{Binding ShortDescription}" />
+            </DataGrid.Columns>
+        </DataGrid>
 
         <!-- Mod details view -->
         <Grid Grid.Column="1" Grid.Row="1">

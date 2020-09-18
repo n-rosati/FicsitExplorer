@@ -1,11 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -29,16 +28,12 @@ namespace FicsitExplorer
             {
                 _manager = ModManager.GetInstance();
                 _manager.PopulateMods();
-
-                LvMods.ItemsSource = _manager.ModList;
-                //TODO: Allow user to set sorting method
-                CollectionView view = (CollectionView) CollectionViewSource.GetDefaultView(LvMods.ItemsSource);
-                view.SortDescriptions.Add(new SortDescription("Downloads", ListSortDirection.Descending));
+                LvMods.ItemsSource = _manager.ModList.OrderByDescending(mod => mod.Downloads).ToList();
             }
             else
             {
                 MessageBox.Show(
-                    "Could not connect to API server, please check connection to ficsit.app. Application will now exit",
+                    "Could not connect to API server, please check connection to https://ficsit.app/. Application will now exit",
                     "Network Error", MessageBoxButton.OK);
                     Application.Current.Shutdown();
             }
@@ -46,7 +41,7 @@ namespace FicsitExplorer
 
         bool internetState()
         {
-            bool ping = false;
+            bool ping;
             try
             {
                 ping = new Ping().Send("api.ficsit.app")!.Status == IPStatus.Success;
@@ -81,7 +76,7 @@ namespace FicsitExplorer
          */
         private void SetModDetails(object sender, SelectionChangedEventArgs e)
         {
-            Mod mod = (Mod) ((ListView) sender).SelectedItem;
+            Mod mod = (Mod) ((DataGrid) sender).SelectedItem; //FIXME: This is outdated
 
             if (mod.LogoURL == "")
             {
