@@ -94,12 +94,11 @@ namespace FicsitExplorer
          * Returns true on success, false otherwise
          */
         [SuppressMessage("ReSharper.DPA", "DPA0001: Memory allocation issues")]
-        public void DownloadMod(string url)
+        public async void DownloadMod(string downloadURL)
         {
-            //TODO: Run the downloader on another thread to prevent pausing on the main thread
-            IRestResponse response = APIInteractor.Client.Get(new RestRequest(url));
-			if (!response.IsSuccessful) throw new Exception("Download failed.");
-            File.WriteAllBytes($"{DownloadPath}\\{response.Headers[3].Value!.ToString()!.Split('/')[2]}", response.RawBytes);
+            IRestResponse response = await APIInteractor.Client.ExecuteAsync(new RestRequest(downloadURL));
+            if (!response.IsSuccessful) throw new Exception("Download failed.");
+            await File.WriteAllBytesAsync($"{DownloadPath}\\{response.Headers[3].Value!.ToString()!.Split('/')[2]}", response.RawBytes);
         }
     }
 }
