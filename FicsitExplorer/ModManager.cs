@@ -93,7 +93,7 @@ namespace FicsitExplorer
          * Returns true on success, false otherwise
          */
         [SuppressMessage("ReSharper.DPA", "DPA0001: Memory allocation issues")]
-        public async void DownloadMod(string downloadURL, string modName)
+        public static async void DownloadMod(string downloadURL, string modName)
         {
             IRestResponse response = await APIInteractor.Client.ExecuteAsync(new RestRequest(downloadURL));
             if (response.IsSuccessful)

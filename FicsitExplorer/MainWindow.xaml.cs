@@ -57,7 +57,7 @@ namespace FicsitExplorer
         /**
          * Downloads the selected mod to the user's Downloads folder
          */
-        private void DownloadMod(object sender, RoutedEventArgs e) => _manager.DownloadMod((LvMods.SelectedItem as Mod)!.DownloadURL, (LvMods.SelectedItem as Mod)!.Name);
+        private void DownloadMod(object sender, RoutedEventArgs e) => ModManager.DownloadMod((LvMods.SelectedItem as Mod)!.DownloadURL, (LvMods.SelectedItem as Mod)!.Name);
 
         //Event handlers
 
