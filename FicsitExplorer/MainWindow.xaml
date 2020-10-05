@@ -37,7 +37,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Width="Auto" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="Downloads" Width="80" Binding="{Binding Downloads}" />
-                <DataGridTextColumn Header="ShortDescription" Width="*" Binding="{Binding ShortDescription}" />
+                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding ShortDescription}" />
             </DataGrid.Columns>
         </DataGrid>
 
