@@ -35,7 +35,7 @@ namespace FicsitExplorer
                 MessageBox.Show(
                     "Could not connect to API server, please check connection to https://ficsit.app/. Application will now exit",
                     "Network Error", MessageBoxButton.OK);
-                    Application.Current.Shutdown();
+                Application.Current.Shutdown();
             }
         }
 
@@ -57,17 +57,7 @@ namespace FicsitExplorer
         /**
          * Downloads the selected mod to the user's Downloads folder
          */
-        private void DownloadMod(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                _manager.DownloadMod((LvMods.SelectedItem as Mod)!.DownloadURL);
-            }
-            catch
-            {
-                MessageBox.Show($"Could not download mod.\n\n{e}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
+        private void DownloadMod(object sender, RoutedEventArgs e) => _manager.DownloadMod((LvMods.SelectedItem as Mod)!.DownloadURL, (LvMods.SelectedItem as Mod)!.Name);
 
         //Event handlers
 
@@ -76,7 +66,7 @@ namespace FicsitExplorer
          */
         private void SetModDetails(object sender, SelectionChangedEventArgs e)
         {
-            Mod mod = (Mod) ((DataGrid) sender).SelectedItem; //FIXME: This is outdated
+            Mod mod = (Mod) ((DataGrid) sender).SelectedItem;
 
             if (mod.LogoURL == "")
             {
@@ -98,15 +88,8 @@ namespace FicsitExplorer
             if (XamlReader.Load(reader) is FlowDocument document) ModDescription.Document = document;
         }
 
-        private void SetDownloadLocation_OnClick(object sender, RoutedEventArgs e)
-        {
-            //TODO: I want this to be a native folder picker but don't know how to make it
-            new DownloadLocation().ShowDialog();
-        }
+        private void SetDownloadLocation_OnClick(object sender, RoutedEventArgs e) => ModManager.SetDownloadLocation();
 
-        private void Exit_OnClick(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
+        private void Exit_OnClick(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
     }
 }

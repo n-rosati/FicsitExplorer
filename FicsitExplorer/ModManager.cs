@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using FicsitExplorer.Properties;
 using Newtonsoft.Json.Linq;
+using Ookii.Dialogs.Wpf;
 using RestSharp;
 
 namespace FicsitExplorer
@@ -16,7 +17,7 @@ namespace FicsitExplorer
         private static ModManager _instance;
         public readonly APIInteractor APIInteractor;
 
-        public string DownloadPath
+        public static string DownloadPath
         {
             get => Settings.Default.DownloadLocation;
             set => Settings.Default.DownloadLocation = value;
@@ -27,30 +28,30 @@ namespace FicsitExplorer
             ModList = new List<Mod>();
             APIInteractor = new APIInteractor();
 
-            /*TODO: Test. I wrote this tired.
-                    -I think the best way is to default to "" and if Settings.Default.DownloadLocation == "" then prompt to set location, else use Settings.Default.DownloadLocation*/
-            if (Directory.Exists(Settings.Default.DownloadLocation))
+            if (Directory.Exists(DownloadPath)) return;
+            
+            //Alert user and ask for new directory
+            MessageBox.Show("Download location that was set is invalid. Please select a new, valid one.", "Invalid Download Path", MessageBoxButton.OK);
+            SetDownloadLocation();
+        }
+
+        /**
+         * Asks the user for a download location and sets it
+         */
+        internal static void SetDownloadLocation()
+        {
+            VistaFolderBrowserDialog dialog = new VistaFolderBrowserDialog
             {
-                DownloadPath = Settings.Default.DownloadLocation;
-            }
-            else
-            {
-                string homeFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) +
-                                    Path.DirectorySeparatorChar;
-                DownloadPath =
-                    Directory.Exists(homeFolder)
-                        ? homeFolder + "Downloads"
-                        : homeFolder; //Download path is downloads folder or home folder as fallback
-            }
+                Description = "Select a download location.", UseDescriptionForTitle = true
+            };
+            dialog.ShowDialog();
+            DownloadPath = dialog.SelectedPath;
         }
 
         /**
          * Gets the instance of a ModManager (or creates one if none exists)
          */
-        public static ModManager GetInstance()
-        {
-            return _instance ??= new ModManager();
-        }
+        public static ModManager GetInstance() => _instance ??= new ModManager();
 
         /**
          * Populates the mods list with all the mods available on the platform
@@ -70,7 +71,7 @@ namespace FicsitExplorer
         private static Mod CreateModFromJSON(string info)
         {
             Mod mod = new Mod();
-            JObject parsedData   = JObject.Parse(info);
+            JObject parsedData = JObject.Parse(info);
             
             mod.Name             = (string)parsedData["name"]!;
             mod.ShortDescription = (string)parsedData["short_description"]!;
@@ -83,9 +84,7 @@ namespace FicsitExplorer
             //TODO: This should be a list of versions, for version selection
             // if (parsedData["versions"]!.Any()) mod.DownloadURL = $"https://api.ficsit.app{parsedData["versions"]![0]!["link"]!}";
             if (parsedData["versions"]!.Any())
-            {
                 mod.DownloadURL = $"https://api.ficsit.app{parsedData["versions"]!.First!["link"]!}";
-            }
             return mod;
         }
 
@@ -94,11 +93,17 @@ namespace FicsitExplorer
          * Returns true on success, false otherwise
          */
         [SuppressMessage("ReSharper.DPA", "DPA0001: Memory allocation issues")]
-        public async void DownloadMod(string downloadURL)
+        public async void DownloadMod(string downloadURL, string modName)
         {
             IRestResponse response = await APIInteractor.Client.ExecuteAsync(new RestRequest(downloadURL));
-            if (!response.IsSuccessful) throw new Exception("Download failed.");
-            await File.WriteAllBytesAsync($"{DownloadPath}\\{response.Headers[3].Value!.ToString()!.Split('/')[2]}", response.RawBytes);
+            if (response.IsSuccessful)
+            {
+                await File.WriteAllBytesAsync($"{DownloadPath}\\{response.Headers[3].Value!.ToString()!.Split('/')[2]}", response.RawBytes);
+            }
+            else
+            {
+                MessageBox.Show($"Could not download mod: {modName}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
