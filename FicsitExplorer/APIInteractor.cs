@@ -11,18 +11,16 @@ namespace FicsitExplorer
 {
     public class APIInteractor
     {
-        internal const string BaseURL = "api.ficsit.app";
-        public static readonly IRestClient Client = new RestClient("https://" + BaseURL);
+        private const string BaseURL = "api.ficsit.app";
+        public static readonly RestClient Client = new RestClient("https://" + BaseURL);
 
         private static string MakeQuery(string query)
         {
-            IGraphQLHttpExecutor executor = new GraphQLHttpExecutor();
             string returnString;
             try
             {
-                returnString =
-                    JObject.Parse(executor.ExecuteQuery(query, $"https://{BaseURL}/v2/query", HttpMethod.Post).Result.Response)
-                           .SelectToken("data", false)!.ToString();
+                returnString = JObject.Parse(new GraphQLHttpExecutor().ExecuteQuery(query, $"https://{BaseURL}/v2/query", HttpMethod.Post).Result.Response)
+                                      .SelectToken("data", false)!.ToString();
             }
             catch
             {
@@ -35,7 +33,7 @@ namespace FicsitExplorer
         /**
          * Gets a list of all mods on the website
          */
-        public IEnumerable<JToken> GetModList()
+        public static IEnumerable<JToken> GetModList()
         {
             int modCount = GetModsCount();
             List<JToken> mods = new List<JToken>();
@@ -43,7 +41,7 @@ namespace FicsitExplorer
             for (int i = 0; i < modCount / 100 + 1; i++)
             {
                 string response = MakeQuery(
-                    $"{{\"query\":\"query {{getMods (filter: {{limit: 100 offset: {i * 100}}}){{count mods {{id name short_description full_description logo downloads updated_at versions(filter: {{limit: 1}}){{link}}}}}}}}\"}}"
+                    $"{{\"query\":\"query {{getMods (filter: {{limit: 100 offset: {(i * 100).ToString()}}}){{count mods {{id name short_description full_description logo downloads updated_at versions(filter: {{limit: 1}}){{link}}}}}}}}\"}}"
                 );
                 try
                 {
@@ -61,7 +59,7 @@ namespace FicsitExplorer
         /**
          * Gets the number of mods available on the platform
          */
-        private int GetModsCount()
+        private static int GetModsCount()
         {
             string response = MakeQuery("{\"query\":\"query {getMods {count}}\"}");
             int modCount;

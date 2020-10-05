@@ -21,15 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Page Update="DownloadLocation.xaml">
-        <Generator></Generator>
-      </Page>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="DownloadLocation.xaml.cs">
-        <DependentUpon>DownloadLocation.xaml</DependentUpon>
-      </Compile>
       <Compile Update="Properties\Resources.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>

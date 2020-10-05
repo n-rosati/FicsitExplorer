@@ -34,6 +34,9 @@
                   CanUserAddRows="False"
                   VerticalGridLinesBrush="Transparent"
                   HorizontalGridLinesBrush="DimGray">
+            <DataGrid.DataContext>
+                <local:Mod />
+            </DataGrid.DataContext>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Width="Auto" Binding="{Binding Name}" />
                 <DataGridTextColumn Header="Downloads" Width="80" Binding="{Binding Downloads}" />
